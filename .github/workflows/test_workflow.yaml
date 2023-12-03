@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main  # Change this to your main branch name
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11.6 # Change this to your desired Python version
+
+    - name: Install dependencies
+      run: |
+        make requirements
+
+    - name: Apply format 
+      run: |
+        make format
+
+    - name: Run tests
+      run: |
+        make test
+
+    # Commented code for install dependencies (run)
+    # python -m pip install --upgrade pip
+    # pip install -r requirements.txt
+
+    # - name: Code formatting
+    #   run: |
+    #     pip install black
+    #     black . --check --diff  # Adjust options based on your code formatter
+
+    # - name: Run tests
+    #   run: |
+    #     # Replace with your test command, for example:
+    #     python -m unittest discover
+
+    # Add more steps as needed, such as deploying or notifying on failure.
