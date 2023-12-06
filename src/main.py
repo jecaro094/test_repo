@@ -1,6 +1,14 @@
 import math
 
 import numpy as np
+from fastapi import FastAPI
+
+app = FastAPI()
+
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
 
 
 def get_building_distances(buildings, building="store"):

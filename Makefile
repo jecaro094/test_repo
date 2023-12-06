@@ -11,4 +11,12 @@ format:
 test:
 	python -m pytest -- $(CURDIR)/
 
+build:
+	docker-compose build
+
+run:
+	docker-compose up --build
+
+build-run: build run
+
 all: requirements format test
