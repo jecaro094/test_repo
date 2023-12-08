@@ -6,8 +6,10 @@ on:
       - main  # Change this to your main branch name
 
 jobs:
-  set-up:
+  build:
+
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -17,10 +19,6 @@ jobs:
       with:
         python-version: 3.11.6 # Change this to your desired Python version
 
-
-  make-all:
-    runs-on: ubuntu-latest
-    steps:
     - name: Install dependencies
       run: |
         make requirements
@@ -34,15 +32,15 @@ jobs:
         make test
 
   deploy:
+  
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Login to AWS ECR
         uses: aws-actions/amazon-ecr-login@v2
-        with:
-          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Build and push Docker image
         run: |
