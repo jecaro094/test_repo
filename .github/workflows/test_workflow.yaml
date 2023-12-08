@@ -57,10 +57,5 @@ jobs:
         #   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         #   aws-region: ${{ secrets.AWS_REGION }}
         run: |
-          aws elasticbeanstalk create-application-version 
-          --application-name {{ secrets.BEANSTALK_APP_NAME }} 
-          --version-label v${GITHUB_RUN_NUMBER} 
-          --source-bundle S3Bucket=${{ secrets.AWS_S3_BUCKET }},S3Key=${{ secrets.AWS_S3_KEY }}/{{ secrets.ECR_REPO_NAME }}-${{ github.sha }}.zip
-          aws elasticbeanstalk update-environment 
-          --environment-name {{ secrets.BEANSTALK_ENV_NAME }} 
-          --version-label v${GITHUB_RUN_NUMBER}
+          aws elasticbeanstalk create-application-version --application-name ${{ secrets.BEANSTALK_APP_NAME }} --version-label v${GITHUB_RUN_NUMBER} --source-bundle S3Bucket=${{ secrets.AWS_S3_BUCKET }},S3Key=${{ secrets.AWS_S3_KEY }}/${{ secrets.ECR_REPO_NAME }}-${{ github.sha }}.zip
+          aws elasticbeanstalk update-environment --environment-name ${{ secrets.BEANSTALK_ENV_NAME }} --version-label v${GITHUB_RUN_NUMBER}
