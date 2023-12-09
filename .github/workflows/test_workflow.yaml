@@ -47,15 +47,13 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPO_NAME }}:latest .
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPO_NAME }}:latest
+          docker build -t ${{ secrets.AWS_ECR_REGISTRY_URI }}/${{ secrets.ECR_REPO_NAME }}:latest .
+          docker login -u AWS -p $(aws ecr get-login-password --region ${{ secrets.AWS_REGION }}) ${{ secrets.AWS_ECR_REGISTRY_URI }}
+          docker push ${{ secrets.AWS_ECR_REGISTRY_URI }}/${{ secrets.ECR_REPO_NAME }}:latest
 
       - name: Deploy to AWS Elastic Beanstalk
-        # uses: aws-actions/configure-aws-credentials@v1
-        # with:
-        #   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        #   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        #   aws-region: ${{ secrets.AWS_REGION }}
         run: |
-          aws elasticbeanstalk create-application-version --application-name ${{ secrets.BEANSTALK_APP_NAME }} --version-label v${GITHUB_RUN_NUMBER} --source-bundle S3Bucket=${{ secrets.AWS_S3_BUCKET }},S3Key=${{ secrets.AWS_S3_KEY }}/${{ secrets.ECR_REPO_NAME }}-${{ github.sha }}.zip
-          aws elasticbeanstalk update-environment --environment-name ${{ secrets.BEANSTALK_ENV_NAME }} --version-label v${GITHUB_RUN_NUMBER}
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws configure set default.region ${{ secrets.AWS_REGION }}
+          eb create your-environment-name
