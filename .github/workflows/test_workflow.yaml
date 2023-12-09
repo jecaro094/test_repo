@@ -62,7 +62,6 @@ jobs:
           echo 'export PATH="$PATH:$HOME/.local/bin"' >> $GITHUB_ENV
 
       - name: Deploy to AWS Elastic Beanstalk
-        uses: einaregilsson/beanstalk-deploy@v21
         run: |
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
