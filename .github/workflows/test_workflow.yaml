@@ -51,7 +51,18 @@ jobs:
           docker login -u AWS -p $(aws ecr get-login-password --region ${{ secrets.AWS_REGION }}) ${{ secrets.AWS_ECR_REGISTRY_URI }}
           docker push ${{ secrets.AWS_ECR_REGISTRY_URI }}/${{ secrets.ECR_REPO_NAME }}:latest
 
+      # We consider this step only to install `eb` comand in order to deploy in BEANSTALK
+      - name: Install AWS CLI and EB CLI
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+          sudo apt-get install -y python3-pip
+          pip3 install --upgrade pip
+          pip3 install awsebcli --upgrade --user
+          echo 'export PATH="$PATH:$HOME/.local/bin"' >> $GITHUB_ENV
+
       - name: Deploy to AWS Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v21
         run: |
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
