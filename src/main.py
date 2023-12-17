@@ -1,15 +1,33 @@
 import math
+import random
 
 import numpy as np
 from fastapi import FastAPI
-import random
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+def define_random_list(list_size):
+    returned_list = []
+    for x in range(0, list_size):
+        returned_list.append(random.randint(0, 9))
+    return returned_list
 
 
 @app.get("/")
 async def root():
-    return {"random_number": random.randint(0,9)}
+    return {"random_number": define_random_list(10)}
 
 
 def get_building_distances(buildings, building="store"):
