@@ -2,13 +2,14 @@ import math
 
 import numpy as np
 from fastapi import FastAPI
+import random
 
 app = FastAPI()
 
 
 @app.get("/")
 async def root():
-    return {"message": "Hello Worldi"}
+    return {"random_number": random.randint(0,9)}
 
 
 def get_building_distances(buildings, building="store"):
