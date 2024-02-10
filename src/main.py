@@ -4,6 +4,7 @@ import random
 import numpy as np
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from src.weather import get_weather
 
 app = FastAPI()
 
@@ -28,6 +29,18 @@ def define_random_list(list_size):
 @app.get("/")
 async def root():
     return {"random_number": define_random_list(10)}
+
+
+@app.get("/weather")
+async def get_weather_(city_name: str):   
+    if not city_name:
+        return {}
+    weather_from_city = get_weather(city_name)
+    weather_from_city['main'].pop('pressure')
+    weather_from_city['main'].pop('humidity')
+    for temp_key in ['temp', 'temp_min', 'temp_max', 'feels_like']:
+        weather_from_city['main'][temp_key] -= 273.15
+    return weather_from_city
 
 
 def get_building_distances(buildings, building="store"):
